@@ -62,7 +62,7 @@ def init_sim():
         #slave_start_id = config.getint('slaves', 'slave_start_id')
         #input_register_count = config.getint('slave-config', 'input_register_count')
         #holding_register_count = config.getint('slave-config','holding_register_count')
-
+        print(config)
         if config.mode == 'rtu':
             sim = ModbusSim(mode=config.mode,
                             port=config.serial,
