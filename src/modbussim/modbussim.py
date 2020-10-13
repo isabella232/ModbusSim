@@ -186,12 +186,15 @@ class ModbusSim(Simulator):
         return toReturn
 
     def load_slave_dump(self, dump):
-        registersDict = {}
+        registers_dict = {}
         slave_id = dump['slave_id']
-        registers = dump['registers']
-        for register in registers:
-            self.load_register(slave_id, register, registersDict)
-        self.slaves.update({slave_id: registersDict})
+        register_groups = dump['registers']
+        if slave_id not in self.slaves:
+            print("Add slave for slave_id: " + str(slave_id))
+            self.server.add_slave(slave_id)
+        for register_group in register_groups:
+            self.load_register(slave_id, register_group, registers_dict)
+        self.slaves.update({slave_id: registers_dict})
 
     def load_register(self, slave_id, register, registers_dict):
         print(register)
@@ -200,13 +203,12 @@ class ModbusSim(Simulator):
         register_type = register['register_type']
         start_address = register['start_address']
         register_data = register['register_data']
+
+        slave = self.server.get_slave(slave_id)
         if slave_id in self.slaves:
-            slave = self.server.get_slave(slave_id)
-            slaveDict = self.slaves[slave_id]
-            if register_name in slaveDict and slaveDict[register_name + '_register_count'] > 0:
+            slave_dict = self.slaves[slave_id]
+            if register_name in slave_dict and slave_dict[register_name + '_register_count'] > 0:
                 slave.remove_block(register_name)
-        else:
-            slave = self.server.add_slave(slave_id)
         
         if register_count > 0:
             slave.add_block(register_name + '_registers',
