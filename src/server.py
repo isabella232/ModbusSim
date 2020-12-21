@@ -466,6 +466,7 @@ def slave_read(slave_id, block, address):
     global sim
     if slave_id not in sim.slaves:
         return "Slave does not exist", 400
+    slave = sim.server.get_slave(slave_id)
     value = slave.get_values(block, address, 1)
     return str(value[0])
 
