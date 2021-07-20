@@ -239,7 +239,7 @@ def load_dump():
                 description: The result of the load operation
     """
     global sim
-    if request.headers['Content-Type'] == 'application/json':
+    if isJson(request):
         sim.load_simulator_dump(request.json)
         return "Finished loading dump", 200
     return "Unsupported Media Type", 415
@@ -323,7 +323,7 @@ def add_slave_by_id(slave_id):
                 description: The result of the load operation
     """
     global sim
-    if request.headers['Content-Type'] == 'application/json':
+    if isJson(request):
         if request.json:
             sim.add_slave(slave_id, request.json)
             return "Success"
@@ -392,7 +392,7 @@ def load_slave_dump(slave_id):
                 description: The result of the load operation
     """
     global sim
-    if request.headers['Content-Type'] == 'application/json':
+    if isJson(request):
         sim.load_slave_dump(request.json)
         return "Finished loading dump", 200
     return "Unsupported Media Type", 415
@@ -537,7 +537,7 @@ def slave_write(slave_id, block, address):
             value = int(request.data)
         except Exception:
             return "Could not convert to integer", 400
-    elif request.headers['Content-Type'] == 'application/json':
+    elif isJson(request):
 
         request_json = request.get_json()
         if "value" in request_json:
@@ -575,6 +575,10 @@ def convert_to_shorts_tuple(value, fmt, size):
 def unhandled_exception(e):
     LOGGER.error('Unhandled Exception: %s', e)
     return str(e), 500
+
+def isJson(request):
+    content_type = request.headers['Content-Type']
+    return content_type is not None and content_type.startswith("application/json")
 
 
 def parse_args():
