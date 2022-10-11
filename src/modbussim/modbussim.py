@@ -132,7 +132,7 @@ class ModbusSim(Simulator):
                 register_name + '_register_type': register_type
             }})
             if register_count > 0:
-                slave.add_block(register_name + '_registers', register_type, start_address, register_count)
+                slave.add_block(register_name, register_type, start_address, register_count)
 
         self.slaves.update({slave_id: registers_dict})
 
@@ -171,7 +171,7 @@ class ModbusSim(Simulator):
             registers = []
 
             if register_count > 0:
-                registers = slave.get_values(register_name + '_registers', start_address, register_count)
+                registers = slave.get_values(register_name, start_address, register_count)
 
             if not toReturn.endswith('['):
                 toReturn += ','
@@ -211,9 +211,9 @@ class ModbusSim(Simulator):
                 slave.remove_block(register_name)
         
         if register_count > 0:
-            slave.add_block(register_name + '_registers',
+            slave.add_block(register_name,
                             register_type, start_address, register_count)
-            slave.set_values(register_name + '_registers', start_address, register_data)
+            slave.set_values(register_name, start_address, register_data)
 
         registers_dict.update({register_name : {
                 register_name + '_register_count': register_count,

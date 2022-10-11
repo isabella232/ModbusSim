@@ -471,7 +471,6 @@ def slave_read(slave_id, block, address):
     return str(value[0])
 
 
-@app.route('/slave/<int:slave_id>/<int:address>', methods=['POST'])
 @app.route('/modbus/slave/<int:slave_id>/<string:block>/<int:address>', methods=['POST'])
 def slave_write(slave_id, block, address):
     """
@@ -649,9 +648,9 @@ def main():
 
 if __name__ == '__main__':
     signal.signal(signal.SIGABRT, signal_handler)
-    signal.signal(signal.SIGHUP, signal_handler)
+    #signal.signal(signal.SIGHUP, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGQUIT, signal_handler)
+    #signal.signal(signal.SIGQUIT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
     main()
     app.run(host=config.get('server','host'), port=config.getint('server','port'),
